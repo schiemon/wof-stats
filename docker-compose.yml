@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  mariadb-test-development:
+    image: mariadb:10.5.8
+    environment:
+      MYSQL_ROOT_PASSWORD: helloworld
+      MYSQL_DATABASE: testapp
+    ports:
+      - "3308:3306"
+
+  admin:
+    image: adminer
+    ports:
+      - "8080:8080"

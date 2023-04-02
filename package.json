@@ -1,0 +1,23 @@
+{
+  "name": "wof-stats",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "forever start -o out.log -e err.log index.js && forever logs index.js -f"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.2.0",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.0.3",
+    "forever": "^4.0.3",
+    "loglevel": "^1.8.1",
+    "loglevel-plugin-prefix": "^0.8.4",
+    "mysql": "^2.18.1",
+    "node-cron": "^3.0.2",
+    "node-fetch": "^3.3.1"
+  }
+}
