@@ -23,7 +23,6 @@ const execQuery = async (fn) => {
                     user: process.env.RDS_USERNAME,
                     database: process.env.WOF_STATS_DB,
                     password: process.env.RDS_PASSWORD,
-                    port: process.env.RDS_PORT
                 });
 
             connection.connect((err) => {
@@ -92,7 +91,6 @@ async function setup() {
         database: process.env.WOF_STATS_DB,
         table: WOF_STATS_TABLE,
         url: WOF_STATS_URL,
-        port: process.env.RDS_PORT
     })
 
     await execQuery(async query => {
