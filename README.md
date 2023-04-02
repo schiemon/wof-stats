@@ -1,4 +1,4 @@
-# wof-stats: WOF Locker Allocation Scraper
+# wof-stats: WOF Locker Allocation Scraper 🤖
 
 This script scrapes a website's locker allocation table and saves it to a MySQL database. 
 
@@ -6,7 +6,7 @@ This script scrapes a website's locker allocation table and saves it to a MySQL 
 
 1. Clone the repository or download the source code.
 2. Navigate to the project's root directory.
-3. Run npm install to install the required dependencies.
+3. Run `npm install` to install the required dependencies.
 
 ## Usage
 
