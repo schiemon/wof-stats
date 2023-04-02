@@ -22,7 +22,7 @@ RDS_PORT=your_database_port
 WOF_STATS_URL=the_website_url_to_scrape
 ```
 
-Modify the cron schedule expression ('* */15 * * * *' in the example code) to suit your needs.
+Modify the cron schedule expression ('*/15 * * * *' in the example code) to suit your needs.
 Run `npm start` to start the script.
 
 ## Notes

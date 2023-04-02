@@ -134,6 +134,6 @@ async function run() {
 await setup();
 
 // Run every 15 minutes (snooze inclusive).
-cron.schedule('* */15 * * * *', async () => {
+cron.schedule('*/15 * * * *', async () => {
     await run();
 });
