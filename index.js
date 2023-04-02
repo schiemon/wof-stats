@@ -117,17 +117,16 @@ function getLockerAllocationTable(html) {
 }
 
 async function save(tableHtml) {
-    logger.info("Saving...");
-
     await execQuery(async (query) => {
         await query(`INSERT INTO \`${WOF_STATS_TABLE}\` (\`version_date\`, \`html\`) VALUES (?, ?)`, [getCurrentDateForDB(), tableHtml]);
     });
 }
 
 async function run() {
-    logger.info("Running...");
+    logger.info("Fetching...");
     const html = await getLockerAllocationTableSite();
     const tableHtml = getLockerAllocationTable(html);
+    logger.info("Saving...");
     await save(tableHtml)
 }
 
