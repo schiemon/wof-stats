@@ -8,7 +8,7 @@ This script scrapes a website's locker allocation table and saves it to a MySQL 
 2. Navigate to the project's root directory.
 3. Run `npm install` to install the required dependencies.
 
-## Usage
+## Usage (`wof-stats-scraper`)
 
 Create a .env file in the project's root directory with the following variables:
 
@@ -38,6 +38,58 @@ wof-stats uses the following technologies:
 
 The script creates a new MySQL table if the specified table does not exist. It saves the current date and time along with the HTML of the website's locker allocation table to the database.
 
+## Usage (`wof-stats-parser`)
+
+First, navigate to the `parser` folder and install `rustup` as described [here](https://www.rust-lang.org/tools/install):
+
+```
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+After that, install the nightly toolchain:
+
+```
+rustup toolchain install nightly
+```
+
+Finally you can run `wof-stats-parser`:
+
+```
+cargo run ./data/wof_stats_raw.json ./data/wof_stats.csv
+```
+
+This will build `wof-stats-parser`, and parses the stat entries in `./data/wof_stats_raw.json` and save the parsed data to `./data/wof_stats.csv`.
+
+The parser expects the following format for the input file:
+
+```
+[
+    {
+        "id": 1,
+        "version_date": "2023-01-01 07:00:00",
+        "html": "<table>...</table>"
+    },
+    {
+        "id": 2,
+        "version_date": "2023-01-01 07:15:00",
+        "html": "<table>...</table>"
+    },
+    ...
+]
+```
+
+It produces the following output:
+
+```
+Date,Studio,NumAllocatedLockers
+2023-01-01T07:00:00.000000000+0000,WOF 1 - Aachen Zentrum,6
+2023-01-01T07:00:00.000000000+0000,WOF 2 - Würselen,8
+...
+2023-01-01T07:00:15.000000000+0000,WOF 1 - Aachen Zentrum,6
+2023-01-01T07:00:15.000000000+0000,WOF 2 - Würselen,8
+...
+```
+
 ## Credits
 
-ChatGPT for generating this README ❤️🤖.
+ChatGPT and GitHub Copilot for generating this README ❤️🤖.
