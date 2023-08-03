@@ -52,10 +52,16 @@ After that, install the nightly toolchain:
 rustup toolchain install nightly
 ```
 
-Finally you can run `wof-stats-parser`:
+Finally you can build `wof-stats-parser`...
 
 ```
-cargo run ./data/wof_stats_raw.json ./data/wof_stats.csv
+cargo build --release
+```
+
+...and run it:
+
+```
+./target/release/wof-stats-parser ./data/wof_stats_raw.json ./data/wof_stats.csv
 ```
 
 This will build `wof-stats-parser`, and parses the stat entries in `./data/wof_stats_raw.json` and save the parsed data to `./data/wof_stats.csv`.
