@@ -1,5 +1,5 @@
 #![feature(iter_next_chunk)]
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, FixedOffset};
 use indicatif::ProgressBar;
 use polars::prelude::*;
 use scraper::{ElementRef, Html, Selector};
@@ -7,23 +7,27 @@ use serde::Deserialize;
 use std::{env, fs::File};
 
 struct WOFStatsEntry {
-    date: DateTime<Utc>,
+    date: DateTime<FixedOffset>,
     studio: String,
     // Number (in percent) of lockers allocated to this studio.
     num_allocated_lockers: u8,
 }
 
 mod wof_date_format {
-    use chrono::{DateTime, TimeZone, Utc};
+    use chrono::{DateTime, FixedOffset, NaiveDateTime};
     use serde::{self, Deserialize, Deserializer};
 
-    pub fn deserialize<'de, D>(deserializer: D) -> Result<DateTime<Utc>, D::Error>
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<DateTime<FixedOffset>, D::Error>
     where
         D: Deserializer<'de>,
     {
         let s = String::deserialize(deserializer)?;
-        Utc.datetime_from_str(&s, "%Y-%m-%d %H:%M:%S")
-            .map_err(serde::de::Error::custom)
+
+        return NaiveDateTime::parse_from_str(&s, "%Y-%m-%d %H:%M:%S")
+            .map(|ndt| {
+                DateTime::<FixedOffset>::from_utc(ndt, FixedOffset::east_opt(2 * 3600).unwrap())
+            })
+            .map_err(serde::de::Error::custom);
     }
 }
 
@@ -31,7 +35,7 @@ mod wof_date_format {
 struct WOFStatsPageSnapshot {
     id: i64,
     #[serde(with = "wof_date_format")]
-    version_date: DateTime<Utc>,
+    version_date: DateTime<FixedOffset>,
     html: String,
 }
 
@@ -74,6 +78,7 @@ fn parse_wof_stats(wof_stats_raw_json: String) -> Result<DataFrame, String> {
 
     let wof_stats_page_snapshots: Vec<WOFStatsPageSnapshot> =
         serde_json::from_str(&wof_stats_raw_json).unwrap();
+
     let mut wof_stats_entries: Vec<WOFStatsEntry> = Vec::new();
     let pb = ProgressBar::new(wof_stats_page_snapshots.len() as u64);
     println!("Parsing snapshots...");
@@ -130,16 +135,22 @@ fn parse_wof_stats(wof_stats_raw_json: String) -> Result<DataFrame, String> {
         pb.inc(1);
     }
 
-    let utc = Some("UTC".to_string());
+    let utc_2 = Some("Europe/Berlin".to_string());
     let dates_foo: Vec<AnyValue> = wof_stats_entries
         .iter()
-        .map(|entry| AnyValue::Datetime(entry.date.timestamp_nanos(), TimeUnit::Nanoseconds, &utc))
+        .map(|entry| {
+            AnyValue::Datetime(
+                entry.date.timestamp_millis(),
+                TimeUnit::Milliseconds,
+                &utc_2,
+            )
+        })
         .collect();
 
     let dates: Series = Series::from_any_values_and_dtype(
         "Dates",
         &dates_foo,
-        &DataType::Datetime(TimeUnit::Nanoseconds, utc.clone()),
+        &DataType::Datetime(TimeUnit::Milliseconds, utc_2.clone()),
         true,
     )
     .unwrap();
