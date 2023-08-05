@@ -1,14 +1,15 @@
 # wof-stats: WOF Locker Allocation Scraper 🤖
 
-This script scrapes a website's locker allocation table and saves it to a MySQL database. 
+This repository consists of a scraper and a parser. The scraper scrapes a website's locker allocation table and saves it to a MySQL database. After exporting the data from the DB into a JSON file, you can use the parser to parse the locker allocation values from the scraped HTML and generate a CSV. The CSV then can be used for analysis.
 
-## Installation
+## `wof-stats-scraper`
 
-1. Clone the repository or download the source code.
-2. Navigate to the project's root directory.
-3. Run `npm install` to install the required dependencies.
+### Installation
 
-## Usage (`wof-stats-scraper`)
+1. Navigate to the `wof-stats-scraper` folder.
+2. Run `npm install` to install the required dependencies.
+
+### Execution
 
 Create a .env file in the project's root directory with the following variables:
 
@@ -25,40 +26,31 @@ WOF_STATS_URL=the_website_url_to_scrape
 Modify the cron schedule expression ('*/15 * * * *' in the example code) to suit your needs.
 Run `npm start` to start the script.
 
-## Notes
-
-wof-stats uses the following technologies:
-
-- Node.js
-- dotenv: Loads environment variables from a .env file
-- cheerio: Parses HTML and provides a jQuery-like interface for manipulating it
-- node-fetch: A light-weight module that brings window.fetch to Node.js
-- mysql: A Node.js driver for MySQL databases
-- node-cron: A module that allows you to schedule cron jobs to run at specific times
-
 The script creates a new MySQL table if the specified table does not exist. It saves the current date and time along with the HTML of the website's locker allocation table to the database.
 
-## Usage (`wof-stats-parser`)
+## `wof-stats-parser`
 
-First, navigate to the `parser` folder and install `rustup` as described [here](https://www.rust-lang.org/tools/install):
+### Installation
 
-```
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-```
+1. First, navigate to the `parser` folder and install `rustup` as described [here](https://www.rust-lang.org/tools/install):
 
-After that, install the nightly toolchain:
+   ```
+   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+   ```
 
-```
-rustup toolchain install nightly
-```
+2. After that, install the nightly toolchain:
 
-Finally you can build `wof-stats-parser`...
+   ```
+   rustup toolchain install nightly
+   ```
 
-```
-cargo build --release
-```
+3. Finally you can build `wof-stats-parser`:
 
-...and run it:
+   ```
+   cargo build --release
+   ```
+
+### Execution
 
 ```
 ./target/release/wof-stats-parser ./data/wof_stats_raw.json ./data/wof_stats.csv
