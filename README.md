@@ -1,5 +1,7 @@
 # wof-stats: WOF Locker Allocation Scraper 🤖
 
+![wof-pur-aachen_weekday](https://github.com/user-attachments/assets/cbb9d891-1787-4433-8f13-0f0d675e129d)
+
 This repository consists of a scraper and a parser. The scraper scrapes a website's locker allocation table and saves it to a MySQL database. After exporting the data from the DB into a JSON file, you can use the parser to parse the locker allocation values from the scraped HTML and generate a CSV. The CSV then can be used for analysis.
 
 ## `wof-stats-scraper`
